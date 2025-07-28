@@ -8,6 +8,7 @@ import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Admin from "./pages/Admin";
 import Calendar from "./pages/Calendar";
 import LiveServices from "./pages/LiveServices";
 import Retreat from "./pages/Retreat";
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/bible-studies" element={<BibleStudies />} />
           <Route path="/prayer-testimonies" element={<PrayerTestimonies />} />
+          <Route path="/admin" element={<Admin />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

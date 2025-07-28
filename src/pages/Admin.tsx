@@ -1,0 +1,287 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useNavigate } from "react-router-dom";
+import { Eye, Edit, Trash2, Download, Users, ArrowLeft, Lock } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
+
+const Admin = () => {
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  
+  // Mock data - em produção seria vindo do backend
+  const mockMembers = [
+    {
+      id: "001",
+      fullName: "João Silva Santos",
+      email: "joao@email.com",
+      phone: "(11) 99999-9999",
+      birthDate: "1990-05-15",
+      documentType: "CPF",
+      documentNumber: "123.456.789-00",
+      address: "Rua das Flores, 123",
+      city: "São Paulo",
+      zipCode: "01234-567",
+      country: "Brasil",
+      churchName: "Assembleia de Deus Bon Pastor",
+      registrationDate: "2024-01-15"
+    },
+    {
+      id: "002", 
+      fullName: "Maria Oliveira",
+      email: "maria@email.com",
+      phone: "(11) 88888-8888",
+      birthDate: "1985-08-22",
+      documentType: "CPF",
+      documentNumber: "987.654.321-00",
+      address: "Av. Principal, 456",
+      city: "São Paulo", 
+      zipCode: "01234-890",
+      country: "Brasil",
+      churchName: "Igreja Local",
+      registrationDate: "2024-01-20"
+    }
+  ];
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === "admin123") {
+      setIsAuthenticated(true);
+      toast({
+        title: "Acesso autorizado",
+        description: "Bem-vindo à área administrativa"
+      });
+    } else {
+      toast({
+        title: "Senha incorreta",
+        description: "Verifique sua senha e tente novamente",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleEdit = (memberId: string) => {
+    toast({
+      title: "Função em desenvolvimento",
+      description: `Editar membro ID: ${memberId}`
+    });
+  };
+
+  const handleDelete = (memberId: string) => {
+    toast({
+      title: "Função em desenvolvimento", 
+      description: `Excluir membro ID: ${memberId}`
+    });
+  };
+
+  const handleExport = () => {
+    toast({
+      title: "Exportando dados",
+      description: "O arquivo será baixado em instantes"
+    });
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-peaceful flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <img 
+              src={logoAssembleia} 
+              alt="Logo da Igreja" 
+              className="h-16 w-16 mx-auto mb-4"
+            />
+            <CardTitle className="text-2xl text-primary flex items-center justify-center">
+              <Lock className="w-6 h-6 mr-2" />
+              Área Administrativa
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <Label htmlFor="password">Senha de Administrador</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Digite a senha"
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Entrar
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => navigate('/')}
+                className="w-full"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-peaceful">
+      {/* Header */}
+      <div className="bg-gradient-primary shadow-divine">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-4">
+              <img 
+                src={logoAssembleia} 
+                alt="Logo da Igreja" 
+                className="h-10 w-10"
+              />
+              <div>
+                <h1 className="text-2xl font-bold text-primary-foreground">Painel Administrativo</h1>
+                <p className="text-primary-foreground/80">Gestão de membros</p>
+              </div>
+            </div>
+            <div className="flex space-x-2">
+              <Button 
+                onClick={handleExport}
+                variant="outline"
+                className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Exportar
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setIsAuthenticated(false);
+                  navigate('/');
+                }}
+                className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Sair
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <Users className="w-8 h-8 text-primary mr-4" />
+                <div>
+                  <p className="text-2xl font-bold">{mockMembers.length}</p>
+                  <p className="text-muted-foreground">Membros cadastrados</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <Users className="w-8 h-8 text-green-500 mr-4" />
+                <div>
+                  <p className="text-2xl font-bold">5</p>
+                  <p className="text-muted-foreground">Inscrições do retiro</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="pt-6">
+              <div className="flex items-center">
+                <Users className="w-8 h-8 text-orange-500 mr-4" />
+                <div>
+                  <p className="text-2xl font-bold">2</p>
+                  <p className="text-muted-foreground">Pagamentos pendentes</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Members Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-xl">Lista de Membros Cadastrados</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-4">ID</th>
+                    <th className="text-left p-4">Nome</th>
+                    <th className="text-left p-4">Email</th>
+                    <th className="text-left p-4">Telefone</th>
+                    <th className="text-left p-4">Igreja</th>
+                    <th className="text-left p-4">Data Cadastro</th>
+                    <th className="text-left p-4">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mockMembers.map((member) => (
+                    <tr key={member.id} className="border-b hover:bg-secondary/50">
+                      <td className="p-4 font-mono">{member.id}</td>
+                      <td className="p-4">{member.fullName}</td>
+                      <td className="p-4">{member.email}</td>
+                      <td className="p-4">{member.phone}</td>
+                      <td className="p-4">{member.churchName}</td>
+                      <td className="p-4">
+                        {new Date(member.registrationDate).toLocaleDateString('pt-BR')}
+                      </td>
+                      <td className="p-4">
+                        <div className="flex space-x-2">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleEdit(member.id)}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleEdit(member.id)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => handleDelete(member.id)}
+                            className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default Admin;

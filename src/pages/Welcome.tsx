@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import churchBackground from "@/assets/church-background.jpg";
-import { Cross, Heart, Users } from "lucide-react";
+import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
+import { Cross, Heart, Users, Settings } from "lucide-react";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -18,17 +19,22 @@ const Welcome = () => {
       <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
         <Card className="max-w-md w-full bg-card/95 backdrop-blur-sm shadow-divine border-0 rounded-3xl overflow-hidden">
           <div className="p-8 text-center">
-            {/* Logo/Icon area */}
+            {/* Logo da Igreja */}
             <div className="mb-6 flex justify-center">
-              <div className="p-4 bg-gradient-primary rounded-full shadow-golden">
-                <Cross className="w-12 h-12 text-primary-foreground" />
-              </div>
+              <img 
+                src={logoAssembleia} 
+                alt="Assembleia de Deus Bon Pastor" 
+                className="h-24 w-24 object-contain drop-shadow-lg"
+              />
             </div>
             
             {/* App Title */}
-            <h1 className="text-4xl font-bold text-foreground mb-2 bg-gradient-holy bg-clip-text text-transparent">
-              App da Igreja
+            <h1 className="text-3xl font-bold text-foreground mb-1 bg-gradient-holy bg-clip-text text-transparent">
+              Assembleia de Deus
             </h1>
+            <h2 className="text-2xl font-semibold text-primary mb-2">
+              Bon Pastor
+            </h2>
             
             {/* Subtitle */}
             <p className="text-muted-foreground mb-8 text-lg">
@@ -61,6 +67,19 @@ const Welcome = () => {
               <br />
               <span className="font-semibold">Mateus 18:20</span>
             </p>
+            
+            {/* Admin Access */}
+            <div className="mt-4">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => navigate('/admin')}
+                className="text-xs text-muted-foreground hover:text-foreground"
+              >
+                <Settings className="w-3 h-3 mr-1" />
+                Área Administrativa
+              </Button>
+            </div>
           </div>
         </Card>
       </div>
