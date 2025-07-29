@@ -8,6 +8,7 @@ import Welcome from "./pages/Welcome";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
 import Calendar from "./pages/Calendar";
 import LiveServices from "./pages/LiveServices";
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route path="/live-services" element={<LiveServices />} />
           <Route path="/retreat" element={<Retreat />} />

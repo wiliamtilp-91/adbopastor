@@ -1,87 +1,60 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import churchBackground from "@/assets/church-background.jpg";
-import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
-import { Cross, Heart, Users, Settings } from "lucide-react";
+import logoSymbol from "@/assets/logo-ad-bon-pastor-symbol.png";
 
 const Welcome = () => {
   const navigate = useNavigate();
 
   return (
-    <div 
-      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
-      style={{ backgroundImage: `url(${churchBackground})` }}
-    >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/40 via-primary/20 to-primary/60"></div>
-      
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <Card className="max-w-md w-full bg-card/95 backdrop-blur-sm shadow-divine border-0 rounded-3xl overflow-hidden">
-          <div className="p-8 text-center">
-            {/* Logo da Igreja */}
-            <div className="mb-6 flex justify-center">
-              <img 
-                src={logoAssembleia} 
-                alt="Assembleia de Deus Bon Pastor" 
-                className="h-24 w-24 object-contain drop-shadow-lg"
-              />
-            </div>
-            
-            {/* App Title */}
-            <h1 className="text-3xl font-bold text-foreground mb-1 bg-gradient-holy bg-clip-text text-transparent">
-              Assembleia de Deus
-            </h1>
-            <h2 className="text-2xl font-semibold text-primary mb-2">
-              Bon Pastor
-            </h2>
-            
-            {/* Subtitle */}
-            <p className="text-muted-foreground mb-8 text-lg">
-              Conectando nossa comunidade em fé e amor
-            </p>
-            
-            {/* Action buttons */}
-            <div className="space-y-4">
-              <Button 
-                className="w-full h-12 text-lg font-semibold bg-gradient-primary hover:shadow-divine transition-all duration-300"
-                onClick={() => navigate('/login')}
-              >
-                <Users className="w-5 h-5 mr-2" />
-                Entrar
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                className="w-full h-12 text-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300"
-                onClick={() => navigate('/register')}
-              >
-                <Heart className="w-5 h-5 mr-2" />
-                Cadastrar-se
-              </Button>
-            </div>
-            
-            {/* Bottom message */}
-            <p className="text-sm text-muted-foreground mt-6">
-              "Onde dois ou três se reúnem em meu nome, ali eu estou no meio deles."
-              <br />
-              <span className="font-semibold">Mateus 18:20</span>
-            </p>
-            
-            {/* Admin Access */}
-            <div className="mt-4">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/admin')}
-                className="text-xs text-muted-foreground hover:text-foreground"
-              >
-                <Settings className="w-3 h-3 mr-1" />
-                Área Administrativa
-              </Button>
-            </div>
-          </div>
-        </Card>
+    <div className="min-h-screen bg-gradient-peaceful flex flex-col items-center justify-center p-4">
+      <div className="text-center space-y-8 max-w-md">
+        {/* Logo - Apenas o brasão centralizado como splash screen */}
+        <div className="flex justify-center mb-8">
+          <img 
+            src={logoSymbol} 
+            alt="Igreja Assembleia de Deus Bon Pastor" 
+            className="h-40 w-auto"
+          />
+        </div>
+
+        {/* Título Principal */}
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold text-white">
+            App da Igreja
+          </h1>
+          <p className="text-lg text-white/90">
+            Assembleia de Deus Bon Pastor
+          </p>
+        </div>
+
+        {/* Botões de Ação */}
+        <div className="space-y-4 pt-8">
+          <Button
+            onClick={() => navigate('/login')}
+            className="w-full bg-gradient-primary hover:shadow-divine transition-all duration-300 text-black font-semibold py-3"
+          >
+            Entrar
+          </Button>
+          
+          <Button
+            onClick={() => navigate('/register')}
+            variant="outline"
+            className="w-full border-white text-white hover:bg-white hover:text-primary transition-all duration-300 py-3"
+          >
+            Cadastrar-se
+          </Button>
+        </div>
+
+        {/* Botão Admin (oculto) */}
+        <div className="pt-4">
+          <Button
+            onClick={() => navigate('/admin')}
+            variant="ghost"
+            className="text-xs text-white/50 hover:text-white/80"
+          >
+            Área Administrativa
+          </Button>
+        </div>
       </div>
     </div>
   );

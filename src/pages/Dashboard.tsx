@@ -72,24 +72,33 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-peaceful">
       {/* Header */}
-      <div className="bg-gradient-primary shadow-divine">
+      <div className="bg-primary shadow-divine">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <Church className="w-8 h-8 text-primary-foreground" />
               <div>
-                <h1 className="text-2xl font-bold text-primary-foreground">App da Igreja</h1>
+                <h1 className="text-2xl font-bold text-primary-foreground">Igreja Assembleia de Deus Bon Pastor</h1>
                 <p className="text-primary-foreground/80">Bem-vindo de volta!</p>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/')}
-              className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sair
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => navigate('/profile')}
+                variant="outline"
+                className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                Meu Perfil
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/')}
+                className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sair
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -126,7 +135,7 @@ const Dashboard = () => {
 
         {/* Quick Stats */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="text-center bg-gradient-holy border-0">
+          <Card className="text-center bg-primary border-0">
             <CardContent className="pt-6">
               <Users className="w-12 h-12 mx-auto mb-4 text-primary-foreground" />
               <h3 className="text-2xl font-bold text-primary-foreground">250+</h3>
@@ -134,19 +143,19 @@ const Dashboard = () => {
             </CardContent>
           </Card>
           
-          <Card className="text-center bg-gradient-primary border-0">
+          <Card className="text-center bg-accent border-0">
             <CardContent className="pt-6">
-              <Calendar className="w-12 h-12 mx-auto mb-4 text-primary-foreground" />
-              <h3 className="text-2xl font-bold text-primary-foreground">15</h3>
-              <p className="text-primary-foreground/80">Eventos este mês</p>
+              <Calendar className="w-12 h-12 mx-auto mb-4 text-accent-foreground" />
+              <h3 className="text-2xl font-bold text-accent-foreground">15</h3>
+              <p className="text-accent-foreground/80">Eventos este mês</p>
             </CardContent>
           </Card>
           
-          <Card className="text-center bg-accent border-0">
+          <Card className="text-center bg-secondary border-0">
             <CardContent className="pt-6">
-              <Heart className="w-12 h-12 mx-auto mb-4 text-accent-foreground" />
-              <h3 className="text-2xl font-bold text-accent-foreground">42</h3>
-              <p className="text-accent-foreground/80">Pedidos de oração</p>
+              <Heart className="w-12 h-12 mx-auto mb-4 text-secondary-foreground" />
+              <h3 className="text-2xl font-bold text-secondary-foreground">42</h3>
+              <p className="text-secondary-foreground/80">Pedidos de oração</p>
             </CardContent>
           </Card>
         </div>
