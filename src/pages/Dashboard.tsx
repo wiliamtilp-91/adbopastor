@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import { 
   Calendar, 
   Video, 
@@ -11,11 +12,21 @@ import {
   Users,
   Church,
   LogOut,
-  MapPin
+  MapPin,
+  Shield
 } from "lucide-react";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { isAdmin, isLoading } = useAdminCheck();
+
+  // Auto redirect admin users to admin dashboard
+  useEffect(() => {
+    if (!isLoading && isAdmin) {
+      navigate('/admin-dashboard');
+    }
+  }, [isAdmin, isLoading, navigate]);
 
   const menuItems = [
     {
@@ -90,6 +101,16 @@ const Dashboard = () => {
               >
                 Meu Perfil
               </Button>
+              {isAdmin && (
+                <Button 
+                  variant="outline" 
+                  onClick={() => navigate('/admin-dashboard')}
+                  className="bg-transparent border-accent text-accent-foreground hover:bg-accent hover:text-accent-foreground"
+                >
+                  <Shield className="w-4 h-4 mr-2" />
+                  Admin
+                </Button>
+              )}
               <Button 
                 variant="outline" 
                 onClick={() => navigate('/')}

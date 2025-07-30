@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
+import AdminDashboard from "./pages/AdminDashboard";
 import Calendar from "./pages/Calendar";
 import LiveServices from "./pages/LiveServices";
 import Retreat from "./pages/Retreat";
@@ -41,9 +42,10 @@ const App = () => (
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/bible-studies" element={<BibleStudies />} />
           <Route path="/prayer-testimonies" element={<PrayerTestimonies />} />
-          <Route path="/admin" element={<Admin />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
         </Routes>
         <WhatsAppButton />
       </BrowserRouter>

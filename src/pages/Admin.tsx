@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, Edit, Trash2, Download, Users, ArrowLeft, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
+import { supabase } from "@/integrations/supabase/client";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -48,18 +49,43 @@ const Admin = () => {
     }
   ];
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "admin123") {
-      setIsAuthenticated(true);
+    
+    // Check if user is admin in Supabase
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast({
+          title: "Erro de autenticação",
+          description: "Usuário não encontrado. Faça login primeiro.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_admin')
+        .eq('user_id', user.id)
+        .single();
+
+      if (profile?.is_admin) {
+        // Redirect to new admin dashboard
+        navigate('/admin-dashboard');
+      } else {
+        toast({
+          title: "Acesso negado",
+          description: "Você não tem permissões de administrador.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error checking admin status:', error);
       toast({
-        title: "Acesso autorizado",
-        description: "Bem-vindo à área administrativa"
-      });
-    } else {
-      toast({
-        title: "Senha incorreta",
-        description: "Verifique sua senha e tente novamente",
+        title: "Erro",
+        description: "Erro ao verificar permissões.",
         variant: "destructive"
       });
     }
