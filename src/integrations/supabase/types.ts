@@ -41,6 +41,30 @@ export type Database = {
         }
         Relationships: []
       }
+      app_configurations: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string | null
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           created_at: string
@@ -112,6 +136,107 @@ export type Database = {
           },
         ]
       }
+      galleries: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_id: string | null
+          id: string
+          is_active: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_id?: string | null
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          gallery_id: string
+          id: string
+          is_approved: boolean | null
+          photo_url: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          gallery_id: string
+          id?: string
+          is_approved?: boolean | null
+          photo_url: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          gallery_id?: string
+          id?: string
+          is_approved?: boolean | null
+          photo_url?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_gallery_photos_gallery_id"
+            columns: ["gallery_id"]
+            isOneToOne: false
+            referencedRelation: "galleries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      prayer_requests: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          is_answered: boolean | null
+          is_approved: boolean | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          is_answered?: boolean | null
+          is_approved?: boolean | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          is_answered?: boolean | null
+          is_approved?: boolean | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           address: string | null
@@ -124,6 +249,7 @@ export type Database = {
           document_type: string | null
           full_name: string
           id: string
+          is_admin: boolean | null
           member_id: string | null
           phone: string | null
           profile_photo_url: string | null
@@ -142,6 +268,7 @@ export type Database = {
           document_type?: string | null
           full_name: string
           id?: string
+          is_admin?: boolean | null
           member_id?: string | null
           phone?: string | null
           profile_photo_url?: string | null
@@ -160,6 +287,7 @@ export type Database = {
           document_type?: string | null
           full_name?: string
           id?: string
+          is_admin?: boolean | null
           member_id?: string | null
           phone?: string | null
           profile_photo_url?: string | null
@@ -197,6 +325,36 @@ export type Database = {
           payment_proof_url?: string | null
           payment_type?: string | null
           status?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      testimonies: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean | null
+          title?: string
           updated_at?: string
           user_id?: string
         }
