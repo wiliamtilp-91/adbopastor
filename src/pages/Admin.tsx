@@ -13,7 +13,9 @@ const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   
   // Mock data - em produção seria vindo do backend
   const mockMembers = [
@@ -51,25 +53,48 @@ const Admin = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     
-    // Check if user is admin in Supabase
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
+      // Login with email and password
+      const { data: { user }, error: authError } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+
+      if (authError) {
         toast({
           title: "Erro de autenticação",
-          description: "Usuário não encontrado. Faça login primeiro.",
+          description: "E-mail ou senha incorretos.",
           variant: "destructive"
         });
         return;
       }
 
-      const { data: profile } = await supabase
+      if (!user) {
+        toast({
+          title: "Erro de autenticação",
+          description: "Usuário não encontrado.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Check if user is admin
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('is_admin')
         .eq('user_id', user.id)
         .single();
+
+      if (profileError) {
+        toast({
+          title: "Erro",
+          description: "Erro ao verificar permissões.",
+          variant: "destructive"
+        });
+        return;
+      }
 
       if (profile?.is_admin) {
         // Redirect to new admin dashboard
@@ -82,12 +107,14 @@ const Admin = () => {
         });
       }
     } catch (error) {
-      console.error('Error checking admin status:', error);
+      console.error('Error during login:', error);
       toast({
         title: "Erro",
-        description: "Erro ao verificar permissões.",
+        description: "Erro inesperado durante o login.",
         variant: "destructive"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -130,18 +157,29 @@ const Admin = () => {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <Label htmlFor="password">Senha de Administrador</Label>
+                <Label htmlFor="email">E-mail</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Digite seu e-mail"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Digite a senha"
+                  placeholder="Digite sua senha"
                   required
                 />
               </div>
-              <Button type="submit" className="w-full">
-                Entrar
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Entrando..." : "Entrar"}
               </Button>
               <Button 
                 type="button" 

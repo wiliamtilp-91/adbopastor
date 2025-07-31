@@ -28,6 +28,7 @@ const Profile = () => {
   const { toast } = useToast();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState<Profile>({
     full_name: "",
     phone: "",
@@ -169,6 +170,53 @@ const Profile = () => {
     }
   };
 
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setUploading(true);
+      
+      if (!event.target.files || event.target.files.length === 0) {
+        throw new Error('Você deve selecionar uma imagem para upload.');
+      }
+
+      const file = event.target.files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user?.id}-${Math.random()}.${fileExt}`;
+      const filePath = `profile-photos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('profile-photos')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage
+        .from('profile-photos')
+        .getPublicUrl(filePath);
+
+      setProfile({
+        ...profile,
+        profile_photo_url: data.publicUrl
+      });
+
+      toast({
+        title: "Foto enviada!",
+        description: "Sua foto de perfil foi atualizada com sucesso.",
+      });
+
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Erro ao fazer upload da imagem.",
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/');
@@ -212,6 +260,22 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={user?.email || ""}
+                      disabled
+                      className="pl-10 bg-muted"
+                      title="O e-mail não pode ser alterado por questões de segurança"
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">O e-mail não pode ser alterado</p>
+                </div>
+
+                <div className="space-y-2">
                   <Label htmlFor="phone">Telefone</Label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -246,6 +310,9 @@ const Profile = () => {
                     <option value="CPF">CPF</option>
                     <option value="RG">RG</option>
                     <option value="CNH">CNH</option>
+                    <option value="NIE">NIE (Espanha)</option>
+                    <option value="DNI">DNI (Espanha)</option>
+                    <option value="Passaporte">Passaporte</option>
                   </select>
                 </div>
 
@@ -339,18 +406,47 @@ const Profile = () => {
                     <img
                       src={profile.profile_photo_url}
                       alt="Foto de perfil"
-                      className="w-32 h-32 rounded-full object-cover"
+                      className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"
                     />
                   </div>
                 )}
-                <div className="space-y-2">
-                  <Label htmlFor="profile_photo_url">URL da Foto</Label>
-                  <Input
-                    id="profile_photo_url"
-                    value={profile.profile_photo_url}
-                    onChange={(e) => setProfile({ ...profile, profile_photo_url: e.target.value })}
-                    placeholder="https://exemplo.com/foto.jpg"
-                  />
+                
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="file-upload">Fazer Upload de Foto</Label>
+                    <div className="flex items-center justify-center w-full">
+                      <label htmlFor="file-upload" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-primary/30 rounded-lg cursor-pointer bg-primary/5 hover:bg-primary/10 transition-colors">
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <Camera className="w-8 h-8 mb-2 text-primary/50" />
+                          <p className="mb-2 text-sm text-primary/70">
+                            <span className="font-semibold">Clique para enviar</span> ou arraste uma foto
+                          </p>
+                          <p className="text-xs text-primary/50">PNG, JPG ou JPEG (MAX. 10MB)</p>
+                        </div>
+                        <input 
+                          id="file-upload" 
+                          type="file" 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={handleFileUpload}
+                          disabled={uploading}
+                        />
+                      </label>
+                    </div>
+                    {uploading && (
+                      <p className="text-sm text-primary/70 text-center">Enviando foto...</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="profile_photo_url">Ou cole uma URL da foto</Label>
+                    <Input
+                      id="profile_photo_url"
+                      value={profile.profile_photo_url}
+                      onChange={(e) => setProfile({ ...profile, profile_photo_url: e.target.value })}
+                      placeholder="https://exemplo.com/foto.jpg"
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>
