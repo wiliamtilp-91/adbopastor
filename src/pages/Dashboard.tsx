@@ -16,6 +16,7 @@ import {
   Shield
 } from "lucide-react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import SocialLinks from "@/components/SocialLinks";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -155,7 +156,7 @@ const Dashboard = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-4 gap-6">
           <Card className="text-center bg-primary border-0">
             <CardContent className="pt-6">
               <Users className="w-12 h-12 mx-auto mb-4 text-primary-foreground" />
@@ -179,6 +180,11 @@ const Dashboard = () => {
               <p className="text-secondary-foreground/80">Pedidos de oração</p>
             </CardContent>
           </Card>
+
+          {/* Social Links Card */}
+          <div className="lg:row-span-1">
+            <SocialLinks />
+          </div>
         </div>
       </div>
     </div>

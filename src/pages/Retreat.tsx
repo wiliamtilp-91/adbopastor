@@ -33,9 +33,11 @@ const Retreat = () => {
   };
 
   const installmentOptions = [
-    { value: "1", label: "À vista - R$ 350,00", discount: true },
-    { value: "2", label: "2x de R$ 180,00", discount: false },
-    { value: "3", label: "3x de R$ 120,00", discount: false },
+    { value: "1", label: "À vista - €350,00", discount: true },
+    { value: "2", label: "2x de €180,00", discount: false },
+    { value: "3", label: "3x de €120,00", discount: false },
+    { value: "4", label: "4x de €90,00", discount: false },
+    { value: "5", label: "5x de €72,00", discount: false },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -122,7 +124,7 @@ const Retreat = () => {
                   <DollarSign className="w-5 h-5 text-primary mr-3" />
                   <div>
                     <p className="font-semibold">Valor</p>
-                    <p className="text-muted-foreground">R$ {retreatInfo.price.toFixed(2)}</p>
+                    <p className="text-muted-foreground">€{retreatInfo.price.toFixed(2)}</p>
                   </div>
                 </div>
                 
