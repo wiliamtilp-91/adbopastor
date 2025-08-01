@@ -158,6 +158,15 @@ const Login = () => {
               </Button>
             </form>
 
+            <div className="mt-4 text-center">
+              <button 
+                onClick={() => navigate('/forgot-password')}
+                className="text-sm text-primary hover:underline font-medium"
+              >
+                Esqueci minha senha
+              </button>
+            </div>
+
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
                 Ainda não tem conta?{" "}
