@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 
 const WhatsAppButton = () => {
   const handleWhatsAppClick = () => {
-    // Número da liderança da igreja (substitua pelo número real)
-    const phoneNumber = "5511999999999"; // Formato: código do país + código da área + número
+    // Número da liderança da igreja AD Bon Pastor Barcelona
+    const phoneNumber = "34642744693"; // +34 642 744 693
     const message = "Olá! Gostaria de falar com a liderança da igreja.";
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     
