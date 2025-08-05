@@ -22,6 +22,7 @@ import BibleStudies from "./pages/BibleStudies";
 import PrayerTestimonies from "./pages/PrayerTestimonies";
 import WhatsAppButton from "./components/WhatsAppButton";
 import NotFound from "./pages/NotFound";
+import HomeWorship from "./pages/HomeWorship";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const App = () => (
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/bible-studies" element={<BibleStudies />} />
           <Route path="/prayer-testimonies" element={<PrayerTestimonies />} />
+          <Route path="/home-worship" element={<HomeWorship />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -13,7 +13,8 @@ import {
   Church,
   LogOut,
   MapPin,
-  Shield
+  Shield,
+  Home
 } from "lucide-react";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import SocialLinks from "@/components/SocialLinks";
@@ -59,11 +60,18 @@ const Dashboard = () => {
       color: "bg-green-500"
     },
     {
-      title: "Estudos Bíblicos",
+      title: "Escola Bíblica Dominical (EBD)",
       description: "Materiais e planos de leitura",
       icon: Book,
       path: "/bible-studies",
       color: "bg-purple-500"
+    },
+    {
+      title: "Culto nos Lares",
+      description: "Fortalecendo a fé em família",
+      icon: Home,
+      path: "/home-worship",
+      color: "bg-orange-500"
     },
     {
       title: "Oração e Testemunhos",

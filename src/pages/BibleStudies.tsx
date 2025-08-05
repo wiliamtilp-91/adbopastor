@@ -149,9 +149,10 @@ const BibleStudies = () => {
 
   const categories = [
     { key: 'all', label: 'Todos', icon: Book },
-    { key: 'Ensino', label: 'Ensino', icon: Book },
+    { key: 'Adultos', label: 'Adultos', icon: Users },
     { key: 'Jovens', label: 'Jovens', icon: Users },
-    { key: 'Casais', label: 'Casais', icon: Heart }
+    { key: 'Juvenil', label: 'Juvenil', icon: Users },
+    { key: 'Infantil', label: 'Infantil', icon: Heart }
   ];
 
   return (
@@ -169,7 +170,7 @@ const BibleStudies = () => {
               Voltar
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-primary-foreground">Estudos Bíblicos</h1>
+              <h1 className="text-2xl font-bold text-primary-foreground">Escola Bíblica Dominical (EBD)</h1>
               <p className="text-primary-foreground/80">Materiais de estudo e crescimento espiritual</p>
             </div>
           </div>
@@ -178,7 +179,7 @@ const BibleStudies = () => {
 
       <div className="max-w-6xl mx-auto px-4 py-8">
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             {categories.map((category) => {
               const IconComponent = category.icon;
               return (

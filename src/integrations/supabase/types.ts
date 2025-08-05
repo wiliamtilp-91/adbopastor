@@ -98,6 +98,36 @@ export type Database = {
         }
         Relationships: []
       }
+      ebd_categories: {
+        Row: {
+          age_range: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          age_range?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          age_range?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       events: {
         Row: {
           created_at: string
@@ -237,6 +267,39 @@ export type Database = {
           },
         ]
       }
+      home_worship_sessions: {
+        Row: {
+          created_at: string
+          date: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          study_material_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          study_material_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          study_material_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       nods_page: {
         Row: {
           checksum: string | null
@@ -359,6 +422,7 @@ export type Database = {
           full_name: string
           id: string
           is_admin: boolean | null
+          is_whatsapp: boolean | null
           member_id: string | null
           phone: string | null
           profile_photo_url: string | null
@@ -378,6 +442,7 @@ export type Database = {
           full_name: string
           id?: string
           is_admin?: boolean | null
+          is_whatsapp?: boolean | null
           member_id?: string | null
           phone?: string | null
           profile_photo_url?: string | null
@@ -397,6 +462,7 @@ export type Database = {
           full_name?: string
           id?: string
           is_admin?: boolean | null
+          is_whatsapp?: boolean | null
           member_id?: string | null
           phone?: string | null
           profile_photo_url?: string | null

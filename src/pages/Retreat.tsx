@@ -231,22 +231,22 @@ const Retreat = () => {
                           <SelectValue placeholder="Selecione a forma de pagamento" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="pix">
-                            <div className="flex items-center">
-                              <Smartphone className="w-4 h-4 mr-2" />
-                              PIX
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="credit">
+                          <SelectItem value="credit_debit_card">
                             <div className="flex items-center">
                               <CreditCard className="w-4 h-4 mr-2" />
-                              Cartão de Crédito
+                              Cartão de crédito/débito
                             </div>
                           </SelectItem>
-                          <SelectItem value="boleto">
+                          <SelectItem value="bizum">
+                            <div className="flex items-center">
+                              <Smartphone className="w-4 h-4 mr-2" />
+                              Bizum
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="cash">
                             <div className="flex items-center">
                               <FileText className="w-4 h-4 mr-2" />
-                              Boleto Bancário
+                              Dinheiro
                             </div>
                           </SelectItem>
                         </SelectContent>

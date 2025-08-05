@@ -35,9 +35,9 @@ const SocialLinks = () => {
   ];
 
   const churchInfo = {
-    phone: "+34 642 744 693",
-    address: "Carrer de la Indústria, 123",
-    city: "08025 Barcelona",
+    phone: "+34 635 252 706",
+    address: "Vía Trajana, 11, 1-1",
+    city: "08020 Sant Adrià de Besòs, Barcelona",
     country: "España"
   };
 

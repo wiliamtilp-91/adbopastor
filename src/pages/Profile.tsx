@@ -5,7 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, User, Mail, Phone, MapPin, FileText, Lock, Camera } from "lucide-react";
+import { ArrowLeft, User, Mail, Phone, MapPin, FileText, Lock, Camera, MessageCircle } from "lucide-react";
+import { DocumentValidation } from "@/components/DocumentValidation";
+import { validateDocument } from "@/utils/contactInfo";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FamilyMemberForm } from "@/components/FamilyMemberForm";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from '@supabase/supabase-js';
@@ -21,6 +25,7 @@ interface Profile {
   birth_date: string;
   church_name: string;
   profile_photo_url: string;
+  is_whatsapp: boolean;
 }
 
 const Profile = () => {
@@ -35,17 +40,19 @@ const Profile = () => {
     address: "",
     city: "",
     zip_code: "",
-    document_type: "CPF",
+    document_type: "passport",
     document_number: "",
     birth_date: "",
     church_name: "Assembleia de Deus Bon Pastor",
-    profile_photo_url: ""
+    profile_photo_url: "",
+    is_whatsapp: false
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: ""
   });
+  const [familyMembers, setFamilyMembers] = useState<any[]>([]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -56,6 +63,7 @@ const Profile = () => {
       }
       setUser(user);
       await loadProfile(user.id);
+      await loadFamilyMembers(user.id);
     };
 
     getUser();
@@ -80,11 +88,12 @@ const Profile = () => {
           address: data.address || "",
           city: data.city || "",
           zip_code: data.zip_code || "",
-          document_type: data.document_type || "CPF",
+          document_type: data.document_type || "passport",
           document_number: data.document_number || "",
           birth_date: data.birth_date || "",
           church_name: data.church_name || "Assembleia de Deus Bon Pastor",
-          profile_photo_url: data.profile_photo_url || ""
+          profile_photo_url: data.profile_photo_url || "",
+          is_whatsapp: data.is_whatsapp || false
         });
       }
     } catch (error) {
@@ -97,9 +106,33 @@ const Profile = () => {
     }
   };
 
+  const loadFamilyMembers = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('family_members')
+        .select('*')
+        .eq('main_user_id', userId);
+
+      if (error) throw error;
+      setFamilyMembers(data || []);
+    } catch (error) {
+      console.error('Error loading family members:', error);
+    }
+  };
+
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    // Validate document before saving
+    if (profile.document_number && !validateDocument(profile.document_type, profile.document_number)) {
+      toast({
+        variant: "destructive",
+        title: "Documento inválido",
+        description: "Por favor, verifique o formato do documento informado.",
+      });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -283,9 +316,22 @@ const Profile = () => {
                       id="phone"
                       value={profile.phone}
                       onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                      placeholder="(00) 00000-0000"
+                      placeholder="+34 000 000 000"
                       className="pl-10"
                     />
+                  </div>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <Checkbox
+                      id="is_whatsapp"
+                      checked={profile.is_whatsapp}
+                      onCheckedChange={(checked) => setProfile({ ...profile, is_whatsapp: checked as boolean })}
+                    />
+                    <div className="flex items-center">
+                      <MessageCircle className="h-4 w-4 mr-1 text-green-600" />
+                      <Label htmlFor="is_whatsapp" className="text-sm cursor-pointer">
+                        Este número é WhatsApp
+                      </Label>
+                    </div>
                   </div>
                 </div>
 
@@ -307,12 +353,9 @@ const Profile = () => {
                     onChange={(e) => setProfile({ ...profile, document_type: e.target.value })}
                     className="w-full p-2 border rounded-md"
                   >
-                    <option value="CPF">CPF</option>
-                    <option value="RG">RG</option>
-                    <option value="CNH">CNH</option>
-                    <option value="NIE">NIE (Espanha)</option>
-                    <option value="DNI">DNI (Espanha)</option>
-                    <option value="Passaporte">Passaporte</option>
+                    <option value="passport">Passaporte</option>
+                    <option value="nie">NIE (Espanha)</option>
+                    <option value="dni">DNI (Espanha)</option>
                   </select>
                 </div>
 
@@ -324,10 +367,18 @@ const Profile = () => {
                       id="document_number"
                       value={profile.document_number}
                       onChange={(e) => setProfile({ ...profile, document_number: e.target.value })}
-                      placeholder="000.000.000-00"
+                      placeholder={
+                        profile.document_type === 'nie' ? 'X1234567A' :
+                        profile.document_type === 'dni' ? '12345678A' :
+                        'ABC123456'
+                      }
                       className="pl-10"
                     />
                   </div>
+                  <DocumentValidation 
+                    documentType={profile.document_type}
+                    documentNumber={profile.document_number}
+                  />
                 </div>
 
                 <Button type="submit" disabled={loading} className="w-full bg-gradient-primary text-black font-semibold">
@@ -369,12 +420,12 @@ const Profile = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="zip_code">CEP</Label>
+                  <Label htmlFor="zip_code">Código Postal (Europa)</Label>
                   <Input
                     id="zip_code"
                     value={profile.zip_code}
                     onChange={(e) => setProfile({ ...profile, zip_code: e.target.value })}
-                    placeholder="00000-000"
+                    placeholder="08020"
                   />
                 </div>
 
@@ -492,6 +543,15 @@ const Profile = () => {
               </form>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Family Members Section */}
+        <div className="mt-6">
+          <FamilyMemberForm 
+            userId={user?.id || ''}
+            familyMembers={familyMembers}
+            onUpdate={setFamilyMembers}
+          />
         </div>
 
         <div className="mt-6 flex justify-center">
