@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Plus, ArrowLeft, UserPlus, Send, Camera, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
+const logoAssembleia = "/lovable-uploads/7801ec04-08a5-4b37-8a18-4be9c223bb2b.png";
 import MemberCard from "@/components/MemberCard";
 
 interface FamilyMember {

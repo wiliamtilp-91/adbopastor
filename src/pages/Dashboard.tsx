@@ -97,7 +97,7 @@ const Dashboard = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <img 
-                src="/logocompleta" 
+                src="/lovable-uploads/7801ec04-08a5-4b37-8a18-4be9c223bb2b.png" 
                 alt="Logo Igreja Assembleia de Deus Bon Pastor" 
                 className="w-8 h-8 object-contain"
               />

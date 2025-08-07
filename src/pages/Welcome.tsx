@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import logoSymbol from "@/assets/logo-ad-bon-pastor-symbol.png";
+const logoSymbol = "/lovable-uploads/7801ec04-08a5-4b37-8a18-4be9c223bb2b.png";
 
 const Welcome = () => {
   const navigate = useNavigate();
