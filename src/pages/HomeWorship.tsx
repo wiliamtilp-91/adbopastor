@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, ExternalLink, Home, Users } from "lucide-react";
+import { Calendar, ExternalLink, Home, Users, BookOpen, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -14,12 +14,24 @@ interface HomeWorshipSession {
   is_active: boolean;
 }
 
+interface BibleStudy {
+  id: string;
+  title: string;
+  description: string;
+  file_url: string;
+  file_type: string;
+  category: string;
+  is_active: boolean;
+}
+
 export default function HomeWorship() {
   const [sessions, setSessions] = useState<HomeWorshipSession[]>([]);
+  const [bibleStudies, setBibleStudies] = useState<BibleStudy[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchSessions();
+    fetchBibleStudies();
   }, []);
 
   const fetchSessions = async () => {
@@ -37,6 +49,22 @@ export default function HomeWorship() {
       toast.error('Erro ao carregar sessões de culto');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBibleStudies = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('bible_studies')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setBibleStudies(data || []);
+    } catch (error) {
+      console.error('Error fetching bible studies:', error);
+      toast.error('Erro ao carregar estudos bíblicos');
     }
   };
 
@@ -184,7 +212,49 @@ export default function HomeWorship() {
             </Button>
           </CardContent>
         </Card>
-      </div>
+        </div>
+
+        {/* Bible Studies Section */}
+        <div className="space-y-4 mb-8">
+          <h3 className="text-xl font-bold text-white">Estudos Bíblicos Disponíveis</h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {bibleStudies.length === 0 ? (
+              <Card className="col-span-full">
+                <CardContent className="text-center py-8">
+                  <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">Nenhum estudo disponível</h3>
+                  <p className="text-muted-foreground">
+                    Em breve teremos novos estudos bíblicos para os cultos nos lares.
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              bibleStudies.map((study) => (
+                <Card key={study.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader>
+                    <CardTitle className="text-lg">{study.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {study.description && (
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {study.description}
+                      </p>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full"
+                      onClick={() => window.open(study.file_url, '_blank')}
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Baixar Estudo ({study.file_type.toUpperCase()})
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        </div>
     </div>
   );
 }

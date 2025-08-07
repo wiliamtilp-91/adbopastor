@@ -98,6 +98,45 @@ export type Database = {
         }
         Relationships: []
       }
+      bible_studies: {
+        Row: {
+          category: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          file_type: string
+          file_url: string
+          id: string
+          is_active: boolean | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_type: string
+          file_url: string
+          id?: string
+          is_active?: boolean | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ebd_categories: {
         Row: {
           age_range: string | null
@@ -128,6 +167,56 @@ export type Database = {
         }
         Relationships: []
       }
+      ebd_lessons: {
+        Row: {
+          category_id: string | null
+          created_at: string
+          created_by: string | null
+          description: string | null
+          file_type: string | null
+          file_url: string | null
+          id: string
+          is_active: boolean | null
+          lesson_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_type?: string | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          lesson_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          file_type?: string | null
+          file_url?: string | null
+          id?: string
+          is_active?: boolean | null
+          lesson_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ebd_lessons_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "ebd_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       events: {
         Row: {
           created_at: string
@@ -157,37 +246,58 @@ export type Database = {
       }
       family_members: {
         Row: {
+          address: string | null
           birth_date: string | null
+          church_name: string | null
+          city: string | null
+          country: string | null
           created_at: string
           document_number: string | null
           document_type: string | null
           full_name: string
           id: string
           main_user_id: string
+          ministry: string | null
           phone: string | null
+          profile_photo_url: string | null
           relationship: string | null
+          zip_code: string | null
         }
         Insert: {
+          address?: string | null
           birth_date?: string | null
+          church_name?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           document_number?: string | null
           document_type?: string | null
           full_name: string
           id?: string
           main_user_id: string
+          ministry?: string | null
           phone?: string | null
+          profile_photo_url?: string | null
           relationship?: string | null
+          zip_code?: string | null
         }
         Update: {
+          address?: string | null
           birth_date?: string | null
+          church_name?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           document_number?: string | null
           document_type?: string | null
           full_name?: string
           id?: string
           main_user_id?: string
+          ministry?: string | null
           phone?: string | null
+          profile_photo_url?: string | null
           relationship?: string | null
+          zip_code?: string | null
         }
         Relationships: [
           {
@@ -554,6 +664,33 @@ export type Database = {
           id?: string
           is_approved?: boolean | null
           title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      volunteer_roles: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          role_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          role_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          role_name?: string
           updated_at?: string
           user_id?: string
         }

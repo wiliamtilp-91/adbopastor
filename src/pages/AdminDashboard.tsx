@@ -23,7 +23,10 @@ import {
   Send,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  BookOpen,
+  GraduationCap,
+  UserPlus
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -42,6 +45,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, 
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import logoHorizontal from '@/assets/logo-ad-bon-pastor-horizontal.png';
+import { AdminVolunteerManagement } from '@/components/AdminVolunteerManagement';
+import { AdminBibleStudies } from '@/components/AdminBibleStudies';
+import { AdminEBDLessons } from '@/components/AdminEBDLessons';
 
 interface DashboardStats {
   totalMembers: number;
@@ -83,11 +89,14 @@ const AdminDashboard = () => {
   const menuItems = [
     { title: 'Visão Geral', icon: BarChart3, value: 'overview' },
     { title: 'Membros', icon: Users, value: 'members' },
+    { title: 'Voluntários', icon: UserPlus, value: 'volunteers' },
     { title: 'Retiro', icon: UserCheck, value: 'retreat' },
     { title: 'Comunicados', icon: MessageSquare, value: 'announcements' },
     { title: 'Eventos', icon: Calendar, value: 'events' },
     { title: 'Galeria', icon: Camera, value: 'gallery' },
     { title: 'Oração/Testemunhos', icon: Heart, value: 'prayer' },
+    { title: 'Estudos Bíblicos', icon: BookOpen, value: 'bible_studies' },
+    { title: 'EBD', icon: GraduationCap, value: 'ebd' },
     { title: 'Configurações', icon: Settings, value: 'settings' },
   ];
 
@@ -1044,6 +1053,30 @@ const AdminDashboard = () => {
                   </CardContent>
                 </Card>
               </div>
+            </div>
+          )}
+
+          {/* Volunteers Tab */}
+          {activeTab === 'volunteers' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Gerenciamento de Voluntários</h2>
+              <AdminVolunteerManagement />
+            </div>
+          )}
+
+          {/* Bible Studies Tab */}
+          {activeTab === 'bible_studies' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Estudos Bíblicos</h2>
+              <AdminBibleStudies />
+            </div>
+          )}
+
+          {/* EBD Tab */}
+          {activeTab === 'ebd' && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold">Escola Bíblica Dominical (EBD)</h2>
+              <AdminEBDLessons />
             </div>
           )}
         </main>
