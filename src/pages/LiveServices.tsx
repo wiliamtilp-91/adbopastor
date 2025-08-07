@@ -151,7 +151,7 @@ const LiveServices = () => {
               <p className="mb-6 text-primary-foreground/80">
                 Inscreva-se no nosso canal do YouTube para não perder nenhuma transmissão!
               </p>
-              <Button variant="outline" onClick={() => window.open('https://youtube.com/channel/exemplo', '_blank')} className="https://www.youtube.com/@adbompastorbcn">
+              <Button variant="outline" onClick={() => window.open('https://youtube.com/@adbonpastor', '_blank')} className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Visitar Canal no YouTube
               </Button>

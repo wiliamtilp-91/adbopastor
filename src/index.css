@@ -20,8 +20,8 @@ All colors MUST be HSL.
     --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 88%;  /* #E0E0E0 */
     --muted-foreground: 0 0% 45%;
-    --accent: 45 62% 56%;  /* #D1AE4A - Dourado */
-    --accent-foreground: 0 0% 0%;
+    --accent: 191 76% 38%;  /* #459A55 - Verde moderno */
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 88%;
@@ -35,9 +35,9 @@ All colors MUST be HSL.
     --radius: 0.5rem;
     
     /* Church colors */
-    --gradient-primary: linear-gradient(135deg, hsl(45 62% 56%), hsl(45 62% 66%));  /* Dourado */
+    --gradient-primary: linear-gradient(135deg, hsl(191 76% 38%), hsl(191 76% 48%));  /* Verde moderno */
     --gradient-peaceful: linear-gradient(135deg, hsl(218 71% 22%), hsl(218 71% 32%));  /* Azul escuro */
-    --shadow-divine: 0 10px 30px -10px hsl(45 62% 56% / 0.3);  /* Dourado */
+    --shadow-divine: 0 10px 30px -10px hsl(191 76% 38% / 0.3);  /* Verde moderno */
     --shadow-elegant: 0 8px 32px hsl(218 71% 22% / 0.15);  /* Azul escuro */
     
     --sidebar-background: 0 0% 98%;
@@ -63,7 +63,7 @@ All colors MUST be HSL.
     --secondary-foreground: 0 0% 100%;
     --muted: 218 71% 18%;
     --muted-foreground: 0 0% 65%;
-    --accent: 45 62% 56%;  /* Dourado */
+    --accent: 191 76% 48%;  /* Verde moderno mais claro no dark mode */
     --accent-foreground: 0 0% 0%;
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;

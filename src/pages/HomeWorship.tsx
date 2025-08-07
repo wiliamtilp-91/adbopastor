@@ -41,19 +41,31 @@ export default function HomeWorship() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-peaceful">
       <div className="container mx-auto px-4 py-8">
+        {/* Header with Back Button */}
+        <div className="flex items-center mb-8">
+          <Button 
+            variant="outline" 
+            onClick={() => window.location.href = '/dashboard'}
+            className="mr-4 bg-transparent border-primary-foreground text-white hover:bg-primary-foreground hover:text-primary"
+          >
+            <Home className="w-4 h-4 mr-2" />
+            Voltar à Página Inicial
+          </Button>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center items-center gap-3 mb-4">
             <div className="p-3 bg-primary/10 rounded-full">
               <Home className="h-8 w-8 text-primary" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-white">
               Culto nos Lares
             </h1>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Fortalecendo a fé em família através da palavra de Deus
           </p>
         </div>
