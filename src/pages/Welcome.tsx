@@ -1,27 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-const logoSymbol = "/lovable-uploads/7801ec04-08a5-4b37-8a18-4be9c223bb2b.png";
-import bannerFull from "@/assets/logo-ad-bon-pastor-horizontal.png";
+const bannerFull = "/lovable-uploads/b82043a6-913c-4f94-824a-0c4efbfc04e4.png";
 const Welcome = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-peaceful flex flex-col items-center justify-center p-4">
       <div className="text-center space-y-8 max-w-md">
-        {/* Logo - Apenas o brasão centralizado como splash screen */}
-        <div className="flex justify-center mb-8">
-          <img 
-            src={logoSymbol} 
-            alt="Igreja Assembleia de Deus Bon Pastor" 
-            className="h-40 w-auto"
-          />
-        </div>
+        {/* Removido: splash com brasão para manter apenas o banner principal */}
 
         {/* Banner completo no topo */}
         <div className="w-full flex justify-center">
           <img
             src={bannerFull}
-            alt="Banner Igreja Assembleia de Deus Bon Pastor"
+            alt="Banner oficial da Igreja Assembleia de Deus Bon Pastor"
             className="w-full max-w-2xl h-auto object-contain"
             loading="eager"
           />
