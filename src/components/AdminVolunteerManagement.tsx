@@ -26,6 +26,7 @@ interface VolunteerRole {
 }
 
 const roleOptions = [
+  { value: "general_admin", label: "Administrador Geral" },
   { value: "media_admin", label: "Administrador de Mídia" },
   { value: "content_creator", label: "Criador de Conteúdo" },
   { value: "event_manager", label: "Gerenciador de Eventos" },
@@ -44,36 +45,50 @@ export const AdminVolunteerManagement = () => {
     fetchUsers();
   }, []);
 
-  const fetchVolunteers = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('volunteer_roles')
-        .select('*');
+const fetchVolunteers = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('volunteer_roles')
+      .select('*');
 
-      if (error) throw error;
-      
-      // Get profile data separately 
-      const volunteersWithProfiles = await Promise.all(
-        (data || []).map(async (volunteer) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('full_name')
-            .eq('user_id', volunteer.user_id)
-            .single();
-          
-          return {
-            ...volunteer,
-            profiles: profile || { full_name: 'Usuário não encontrado' }
-          };
-        })
-      );
-      
-      setVolunteers(volunteersWithProfiles);
-    } catch (error) {
-      console.error('Error fetching volunteers:', error);
-      toast.error("Erro ao carregar voluntários");
-    }
-  };
+    if (error) throw error;
+    
+    // Get profile data for volunteers
+    const volunteersWithProfiles = await Promise.all(
+      (data || []).map(async (volunteer) => {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('full_name')
+          .eq('user_id', volunteer.user_id)
+          .single();
+        
+        return {
+          ...volunteer,
+          profiles: profile || { full_name: 'Usuário não encontrado' }
+        } as VolunteerRole;
+      })
+    );
+
+    // Fetch general admins
+    const { data: admins } = await supabase
+      .from('profiles')
+      .select('user_id, full_name')
+      .eq('is_admin', true);
+
+    const adminItems: VolunteerRole[] = (admins || []).map((a: any) => ({
+      id: `admin-${a.user_id}`,
+      user_id: a.user_id,
+      role_name: 'general_admin',
+      created_at: new Date().toISOString(),
+      profiles: { full_name: a.full_name }
+    }));
+    
+    setVolunteers([...adminItems, ...volunteersWithProfiles]);
+  } catch (error) {
+    console.error('Error fetching volunteers:', error);
+    toast.error("Erro ao carregar voluntários");
+  }
+};
 
   const fetchUsers = async () => {
     try {
@@ -100,63 +115,79 @@ export const AdminVolunteerManagement = () => {
       return;
     }
 
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('volunteer_roles')
-        .insert({
-          user_id: selectedUser,
-          role_name: selectedRole
-        });
+setLoading(true);
+try {
+  if (selectedRole === 'general_admin') {
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ is_admin: true })
+      .eq('user_id', selectedUser);
+    if (updateError) throw updateError;
+  } else {
+    const { error } = await supabase
+      .from('volunteer_roles')
+      .insert({
+        user_id: selectedUser,
+        role_name: selectedRole
+      });
+    if (error) throw error;
+  }
 
-      if (error) throw error;
-
-      toast.success("Voluntário adicionado com sucesso!");
-      setSelectedUser("");
-      setSelectedRole("");
-      fetchVolunteers();
-    } catch (error: any) {
-      console.error('Error adding volunteer:', error);
-      if (error.code === '23505') {
-        toast.error("Este usuário já possui este papel");
-      } else {
-        toast.error("Erro ao adicionar voluntário");
-      }
-    } finally {
-      setLoading(false);
-    }
+  toast.success("Permissão aplicada com sucesso!");
+  setSelectedUser("");
+  setSelectedRole("");
+  fetchVolunteers();
+} catch (error: any) {
+  console.error('Error adding volunteer:', error);
+  if (error.code === '23505') {
+    toast.error("Este usuário já possui este papel");
+  } else {
+    toast.error("Erro ao aplicar permissão");
+  }
+} finally {
+  setLoading(false);
+}
   };
 
-  const removeVolunteer = async (id: string) => {
-    try {
+const removeVolunteer = async (id: string) => {
+  try {
+    if (id.startsWith('admin-')) {
+      const userId = id.replace('admin-', '');
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ is_admin: false })
+        .eq('user_id', userId);
+      if (updateError) throw updateError;
+      toast.success("Administrador geral removido!");
+    } else {
       const { error } = await supabase
         .from('volunteer_roles')
         .delete()
         .eq('id', id);
-
       if (error) throw error;
-
       toast.success("Voluntário removido com sucesso!");
-      fetchVolunteers();
-    } catch (error) {
-      console.error('Error removing volunteer:', error);
-      toast.error("Erro ao remover voluntário");
     }
-  };
+    fetchVolunteers();
+  } catch (error) {
+    console.error('Error removing volunteer:', error);
+    toast.error("Erro ao remover permissão");
+  }
+};
 
   const getRoleLabel = (roleName: string) => {
     return roleOptions.find(option => option.value === roleName)?.label || roleName;
   };
 
-  const getRoleColor = (roleName: string) => {
-    const colors: { [key: string]: string } = {
-      media_admin: "bg-blue-100 text-blue-800",
-      content_creator: "bg-green-100 text-green-800",
-      event_manager: "bg-purple-100 text-purple-800",
-      study_coordinator: "bg-orange-100 text-orange-800"
-    };
-    return colors[roleName] || "bg-gray-100 text-gray-800";
+const getRoleColor = (roleName: string) => {
+  const colors: { [key: string]: string } = {
+    general_admin: "bg-red-100 text-red-800",
+    media_admin: "bg-blue-100 text-blue-800",
+    content_creator: "bg-green-100 text-green-800",
+    event_manager: "bg-purple-100 text-purple-800",
+    study_coordinator: "bg-orange-100 text-orange-800"
   };
+  return colors[roleName] || "bg-gray-100 text-gray-800";
+};
 
   return (
     <Card className="shadow-divine border-0">

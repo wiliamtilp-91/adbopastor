@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
-import { Eye, Edit, Trash2, Download, Users, ArrowLeft, Lock } from "lucide-react";
+import { Eye, EyeOff, Edit, Trash2, Download, Users, ArrowLeft, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +15,7 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
   // Mock data - em produção seria vindo do backend
@@ -168,28 +169,49 @@ const Admin = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">Senha</Label>
+              <div className="relative">
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Digite sua senha"
                   required
+                  className="pr-10"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 px-3 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
               </div>
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Entrando..." : "Entrar"}
               </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => navigate('/')}
-                className="w-full"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Voltar
-              </Button>
+              <div className="flex items-center justify-between">
+                <Button 
+                  type="button" 
+                  variant="link"
+                  onClick={() => navigate('/forgot-password')}
+                  className="px-0"
+                >
+                  Esqueci minha senha
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => navigate('/')}
+                  className=""
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Voltar
+                </Button>
+              </div>
             </form>
           </CardContent>
         </Card>

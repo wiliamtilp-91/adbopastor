@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Video, ExternalLink, Calendar, Clock, Users } from "lucide-react";
+const streamsUrl = "https://www.youtube.com/@adbompastorbcn/streams";
 const LiveServices = () => {
   const navigate = useNavigate();
   const services = [{
@@ -12,7 +13,7 @@ const LiveServices = () => {
     isLive: true,
     viewerCount: 245,
     nextService: "Hoje às 19:00",
-    youtubeUrl: "https://youtube.com/channel/exemplo"
+    youtubeUrl: streamsUrl
   }, {
     id: 2,
     title: "Culto de Oração",
@@ -20,7 +21,7 @@ const LiveServices = () => {
     isLive: false,
     viewerCount: 0,
     nextService: "Quarta-feira às 19:30",
-    youtubeUrl: "https://youtube.com/channel/exemplo"
+    youtubeUrl: streamsUrl
   }, {
     id: 3,
     title: "Reunião de Jovens",
@@ -28,30 +29,30 @@ const LiveServices = () => {
     isLive: false,
     viewerCount: 0,
     nextService: "Sexta-feira às 19:00",
-    youtubeUrl: "https://youtube.com/channel/exemplo"
+    youtubeUrl: streamsUrl
   }];
-  const recentServices = [{
-    id: 1,
-    title: "Culto Dominical - \"O Poder da Oração\"",
-    date: "21/01/2024",
-    duration: "1h 45min",
-    views: 892,
-    youtubeUrl: "https://youtube.com/watch?v=exemplo1"
-  }, {
-    id: 2,
-    title: "Culto de Ensino - \"Fé que Move Montanhas\"",
-    date: "18/01/2024",
-    duration: "1h 30min",
-    views: 654,
-    youtubeUrl: "https://youtube.com/watch?v=exemplo2"
-  }, {
-    id: 3,
-    title: "Culto de Oração - \"Buscando a Face de Deus\"",
-    date: "17/01/2024",
-    duration: "1h 15min",
-    views: 432,
-    youtubeUrl: "https://youtube.com/watch?v=exemplo3"
-  }];
+const recentServices = [{
+  id: 1,
+  title: "Culto Dominical - \"O Poder da Oração\"",
+  date: "21/01/2024",
+  duration: "1h 45min",
+  views: 892,
+  youtubeUrl: streamsUrl
+}, {
+  id: 2,
+  title: "Culto de Ensino - \"Fé que Move Montanhas\"",
+  date: "18/01/2024",
+  duration: "1h 30min",
+  views: 654,
+  youtubeUrl: streamsUrl
+}, {
+  id: 3,
+  title: "Culto de Oração - \"Buscando a Face de Deus\"",
+  date: "17/01/2024",
+  duration: "1h 15min",
+  views: 432,
+  youtubeUrl: streamsUrl
+}];
   return <div className="min-h-screen bg-gradient-peaceful">
       {/* Header */}
       <div className="bg-gradient-primary shadow-divine">
@@ -151,7 +152,7 @@ const LiveServices = () => {
               <p className="mb-6 text-primary-foreground/80">
                 Inscreva-se no nosso canal do YouTube para não perder nenhuma transmissão!
               </p>
-              <Button variant="outline" onClick={() => window.open('https://youtube.com/@adbonpastor', '_blank')} className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+              <Button variant="outline" onClick={() => window.open(streamsUrl, '_blank')} className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Visitar Canal no YouTube
               </Button>

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 const logoSymbol = "/lovable-uploads/7801ec04-08a5-4b37-8a18-4be9c223bb2b.png";
-
+import bannerFull from "@/assets/logo-ad-bon-pastor-horizontal.png";
 const Welcome = () => {
   const navigate = useNavigate();
 
@@ -17,14 +17,14 @@ const Welcome = () => {
           />
         </div>
 
-        {/* Título Principal */}
-        <div className="space-y-4">
-          <h1 className="text-4xl font-bold text-white">
-            App da Igreja
-          </h1>
-          <p className="text-lg text-white/90">
-            Assembleia de Deus Bon Pastor
-          </p>
+        {/* Banner completo no topo */}
+        <div className="w-full flex justify-center">
+          <img
+            src={bannerFull}
+            alt="Banner Igreja Assembleia de Deus Bon Pastor"
+            className="w-full max-w-2xl h-auto object-contain"
+            loading="eager"
+          />
         </div>
 
         {/* Botões de Ação */}

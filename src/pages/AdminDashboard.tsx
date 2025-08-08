@@ -44,7 +44,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import logoHorizontal from '@/assets/logo-ad-bon-pastor-horizontal.png';
+import logoSymbol from '@/assets/logo-ad-bon-pastor-symbol.png';
 import { AdminVolunteerManagement } from '@/components/AdminVolunteerManagement';
 import { AdminBibleStudies } from '@/components/AdminBibleStudies';
 import { AdminEBDLessons } from '@/components/AdminEBDLessons';
@@ -375,7 +375,7 @@ const AdminDashboard = () => {
     <Sidebar className="w-64">
       <SidebarContent>
         <div className="p-4 border-b">
-          <img src={logoHorizontal} alt="Logo" className="h-12 w-auto" />
+          <img src={logoSymbol} alt="Logo" className="h-12 w-auto" />
         </div>
         <SidebarGroup>
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
