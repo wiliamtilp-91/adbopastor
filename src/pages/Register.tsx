@@ -10,6 +10,64 @@ import { useToast } from "@/hooks/use-toast";
 const logoAssembleia = "/lovable-uploads/7801ec04-08a5-4b37-8a18-4be9c223bb2b.png";
 import MemberCard from "@/components/MemberCard";
 
+// Mapas auxiliares para Europa
+const COUNTRY_CODE_MAP: Record<string, string> = {
+  "Espanha": "ES",
+  "Portugal": "PT",
+  "França": "FR",
+  "Alemanha": "DE",
+  "Itália": "IT",
+  "Reino Unido": "GB",
+  "Bélgica": "BE",
+  "Holanda": "NL",
+  "Países Baixos": "NL",
+  "Suíça": "CH",
+  "Áustria": "AT",
+  "Suécia": "SE",
+  "Noruega": "NO",
+  "Dinamarca": "DK",
+  "Finlândia": "FI",
+  "Irlanda": "IE",
+  "Polónia": "PL",
+};
+
+const DIAL_CODE_MAP: Record<string, string> = {
+  "Espanha": "+34",
+  "Portugal": "+351",
+  "França": "+33",
+  "Alemanha": "+49",
+  "Itália": "+39",
+  "Reino Unido": "+44",
+  "Bélgica": "+32",
+  "Holanda": "+31",
+  "Países Baixos": "+31",
+  "Suíça": "+41",
+  "Áustria": "+43",
+  "Suécia": "+46",
+  "Noruega": "+47",
+  "Dinamarca": "+45",
+  "Finlândia": "+358",
+  "Irlanda": "+353",
+  "Polónia": "+48",
+};
+
+const getDialCode = (country: string) => DIAL_CODE_MAP[country] || "+34"; // padrão europeu: ES
+
+async function autofillMunicipality(country: string, postal: string) {
+  try {
+    const code = COUNTRY_CODE_MAP[country];
+    if (!code || !postal) return null;
+    const res = await fetch(`https://api.zippopotam.us/${code}/${encodeURIComponent(postal)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const place = data?.places?.[0]?.["place name"];
+    return place || null;
+  } catch {
+    return null;
+  }
+}
+
+
 interface FamilyMember {
   id: string;
   fullName: string;
@@ -41,9 +99,9 @@ const Register = () => {
     address: "",
     city: "",
     zipCode: "",
-    country: "Brasil",
+    country: "Espanha",
     churchName: "",
-    documentType: "CPF",
+    documentType: "DNI/NIE (Espanha)",
     documentNumber: "",
     profilePhoto: null as File | null,
   });
@@ -58,9 +116,9 @@ const Register = () => {
       address: "",
       city: "",
       zipCode: "",
-      country: "Brasil",
+      country: "Espanha",
       churchName: "",
-      documentType: "CPF",
+      documentType: "DNI/NIE (Espanha)",
       documentNumber: "",
     };
     setFamilyMembers([...familyMembers, newMember]);
@@ -194,7 +252,7 @@ const Register = () => {
               id={`phone-${title}`}
               value={member.phone}
               onChange={(e) => updateFunction('phone', e.target.value)}
-              placeholder="(11) 99999-9999"
+              placeholder={`${getDialCode(member.country)} 612 345 678`}
               required
             />
           </div>
@@ -220,22 +278,26 @@ const Register = () => {
             />
           </div>
           <div>
-            <Label htmlFor={`city-${title}`}>Cidade *</Label>
+            <Label htmlFor={`city-${title}`}>Município (Pueblo) *</Label>
             <Input
               id={`city-${title}`}
               value={member.city}
               onChange={(e) => updateFunction('city', e.target.value)}
-              placeholder="Cidade"
+              placeholder="Município/Pueblo"
               required
             />
           </div>
           <div>
-            <Label htmlFor={`zipCode-${title}`}>CEP *</Label>
+            <Label htmlFor={`zipCode-${title}`}>Código Postal *</Label>
             <Input
               id={`zipCode-${title}`}
               value={member.zipCode}
               onChange={(e) => updateFunction('zipCode', e.target.value)}
-              placeholder="00000-000"
+              onBlur={async () => {
+                const place = await autofillMunicipality(member.country, member.zipCode);
+                if (place) updateFunction('city', place);
+              }}
+              placeholder="28013"
               required
             />
           </div>
@@ -246,12 +308,22 @@ const Register = () => {
                 <SelectValue placeholder="Selecione o país" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Brasil">Brasil</SelectItem>
-                <SelectItem value="Argentina">Argentina</SelectItem>
-                <SelectItem value="Chile">Chile</SelectItem>
-                <SelectItem value="Uruguai">Uruguai</SelectItem>
-                <SelectItem value="Paraguai">Paraguai</SelectItem>
-                <SelectItem value="Outro">Outro</SelectItem>
+                <SelectItem value="Espanha">Espanha</SelectItem>
+                <SelectItem value="Portugal">Portugal</SelectItem>
+                <SelectItem value="França">França</SelectItem>
+                <SelectItem value="Alemanha">Alemanha</SelectItem>
+                <SelectItem value="Itália">Itália</SelectItem>
+                <SelectItem value="Reino Unido">Reino Unido</SelectItem>
+                <SelectItem value="Bélgica">Bélgica</SelectItem>
+                <SelectItem value="Holanda">Holanda</SelectItem>
+                <SelectItem value="Suíça">Suíça</SelectItem>
+                <SelectItem value="Áustria">Áustria</SelectItem>
+                <SelectItem value="Suécia">Suécia</SelectItem>
+                <SelectItem value="Noruega">Noruega</SelectItem>
+                <SelectItem value="Dinamarca">Dinamarca</SelectItem>
+                <SelectItem value="Finlândia">Finlândia</SelectItem>
+                <SelectItem value="Irlanda">Irlanda</SelectItem>
+                <SelectItem value="Polónia">Polónia</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -273,8 +345,7 @@ const Register = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="CPF">CPF (Brasil)</SelectItem>
-                <SelectItem value="DNI">DNI (Argentina)</SelectItem>
-                <SelectItem value="NIE">NIE (Espanha)</SelectItem>
+                <SelectItem value="DNI/NIE (Espanha)">DNI/NIE (Espanha)</SelectItem>
                 <SelectItem value="Passaporte">Passaporte</SelectItem>
               </SelectContent>
             </Select>

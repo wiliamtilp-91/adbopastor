@@ -44,7 +44,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import logoSymbol from '@/assets/logo-ad-bon-pastor-symbol.png';
+const adminLogo = "/lovable-uploads/ac6a13e8-2780-4515-a7cf-9f104e0cfc53.png";
 import { AdminVolunteerManagement } from '@/components/AdminVolunteerManagement';
 import { AdminBibleStudies } from '@/components/AdminBibleStudies';
 import { AdminEBDLessons } from '@/components/AdminEBDLessons';
@@ -84,6 +84,8 @@ const AdminDashboard = () => {
   const [dailyVerse, setDailyVerse] = useState('');
   const [newAnnouncement, setNewAnnouncement] = useState({ title: '', content: '', is_urgent: false });
   const [newEvent, setNewEvent] = useState({ name: '', description: '', event_date: '', event_time: '' });
+  const [selectedMember, setSelectedMember] = useState<any | null>(null);
+  const [memberDialogOpen, setMemberDialogOpen] = useState(false);
 
   // Sidebar menu items
   const menuItems = [
@@ -375,7 +377,7 @@ const AdminDashboard = () => {
     <Sidebar className="w-64">
       <SidebarContent>
         <div className="p-4 border-b">
-          <img src={logoSymbol} alt="Logo" className="h-12 w-auto" />
+          <img src={adminLogo} alt="Logo administrativo" className="h-12 w-auto" />
         </div>
         <SidebarGroup>
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
@@ -401,12 +403,51 @@ const AdminDashboard = () => {
 
   const COLORS = ['hsl(var(--primary))', 'hsl(var(--secondary))', 'hsl(var(--accent))', 'hsl(var(--muted))'];
 
-  return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full">
-        <AppSidebar />
-        
-        <main className="flex-1 p-6 bg-background">
+
+// Helper: open member dialog
+const openMemberDialog = (member: any) => {
+  setSelectedMember(member);
+  setMemberDialogOpen(true);
+};
+
+// Save member changes
+const saveMemberChanges = async () => {
+  if (!selectedMember) return;
+  try {
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: selectedMember.full_name,
+        phone: selectedMember.phone,
+        address: selectedMember.address,
+        city: selectedMember.city,
+        zip_code: selectedMember.zip_code,
+        country: selectedMember.country,
+        church_name: selectedMember.church_name,
+        document_type: selectedMember.document_type,
+        document_number: selectedMember.document_number,
+        is_admin: selectedMember.is_admin,
+      })
+      .eq('id', selectedMember.id);
+
+    if (error) throw error;
+
+    toast({ title: 'Sucesso', description: 'Dados do membro atualizados.' });
+    setMemberDialogOpen(false);
+    setSelectedMember(null);
+    loadDashboardData();
+  } catch (e) {
+    console.error(e);
+    toast({ title: 'Erro', description: 'Não foi possível atualizar o membro.', variant: 'destructive' });
+  }
+};
+
+return (
+  <SidebarProvider>
+    <div className="min-h-screen flex w-full">
+      <AppSidebar />
+      
+      <main className="flex-1 p-6 bg-background">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
               <SidebarTrigger />
@@ -609,10 +650,10 @@ const AdminDashboard = () => {
                           <TableCell>{new Date(member.created_at).toLocaleDateString('pt-BR')}</TableCell>
                           <TableCell>
                             <div className="flex gap-2">
-                              <Button size="sm" variant="outline">
+                              <Button size="sm" variant="outline" onClick={() => openMemberDialog(member)}>
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline">
+                              <Button size="sm" variant="outline" onClick={() => openMemberDialog(member)}>
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button size="sm" variant="outline">
@@ -1080,6 +1121,73 @@ const AdminDashboard = () => {
             </div>
           )}
         </main>
+
+        {/* Dialogo de Visualização/Edição de Membro */}
+        <Dialog open={memberDialogOpen} onOpenChange={setMemberDialogOpen}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Dados do Membro</DialogTitle>
+              <DialogDescription>Visualize e edite as informações do membro. Você também pode designar função administrativa.</DialogDescription>
+            </DialogHeader>
+
+            {selectedMember && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Nome completo</Label>
+                    <Input value={selectedMember.full_name || ''} onChange={(e) => setSelectedMember({ ...selectedMember, full_name: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Telefone</Label>
+                    <Input value={selectedMember.phone || ''} onChange={(e) => setSelectedMember({ ...selectedMember, phone: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Documento (tipo)</Label>
+                    <Input value={selectedMember.document_type || ''} onChange={(e) => setSelectedMember({ ...selectedMember, document_type: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Número do documento</Label>
+                    <Input value={selectedMember.document_number || ''} onChange={(e) => setSelectedMember({ ...selectedMember, document_number: e.target.value })} />
+                  </div>
+                  <div className="md:col-span-2">
+                    <Label>Endereço</Label>
+                    <Input value={selectedMember.address || ''} onChange={(e) => setSelectedMember({ ...selectedMember, address: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Município</Label>
+                    <Input value={selectedMember.city || ''} onChange={(e) => setSelectedMember({ ...selectedMember, city: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Código Postal</Label>
+                    <Input value={selectedMember.zip_code || ''} onChange={(e) => setSelectedMember({ ...selectedMember, zip_code: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>País</Label>
+                    <Input value={selectedMember.country || ''} onChange={(e) => setSelectedMember({ ...selectedMember, country: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Igreja</Label>
+                    <Input value={selectedMember.church_name || ''} onChange={(e) => setSelectedMember({ ...selectedMember, church_name: e.target.value })} />
+                  </div>
+                  <div>
+                    <Label>Membro ID</Label>
+                    <Input value={selectedMember.member_id || ''} disabled />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Switch checked={!!selectedMember.is_admin} onCheckedChange={(checked) => setSelectedMember({ ...selectedMember, is_admin: checked })} id="is-admin" />
+                  <Label htmlFor="is-admin">Designar como Administrador</Label>
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setMemberDialogOpen(false)}>Cancelar</Button>
+                  <Button onClick={saveMemberChanges}>Salvar alterações</Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </SidebarProvider>
   );

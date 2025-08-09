@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Edit, Trash2, Download, Users, ArrowLeft, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoAssembleia from "@/assets/logo-assembleia-bon-pastor.png";
+const adminLogo = "/lovable-uploads/ac6a13e8-2780-4515-a7cf-9f104e0cfc53.png";
 import { supabase } from "@/integrations/supabase/client";
 
 const Admin = () => {
@@ -146,8 +146,8 @@ const Admin = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <img 
-              src={logoAssembleia} 
-              alt="Logo da Igreja" 
+              src={adminLogo} 
+              alt="Logo da Área Administrativa" 
               className="h-16 w-16 mx-auto mb-4"
             />
             <CardTitle className="text-2xl text-primary flex items-center justify-center">
@@ -227,8 +227,8 @@ const Admin = () => {
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <img 
-                src={logoAssembleia} 
-                alt="Logo da Igreja" 
+                src={adminLogo} 
+                alt="Logo da Área Administrativa" 
                 className="h-10 w-10"
               />
               <div>
