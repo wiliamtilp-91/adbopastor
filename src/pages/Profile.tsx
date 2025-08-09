@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, User, Mail, Phone, MapPin, FileText, Lock, Camera, MessageCircle } from "lucide-react";
 import { DocumentValidation } from "@/components/DocumentValidation";
@@ -136,11 +137,16 @@ const Profile = () => {
 
     setLoading(true);
     try {
+      const normalizedDocType = ['passport','nie','dni'].includes((profile.document_type || '').toLowerCase())
+        ? (profile.document_type || '').toLowerCase()
+        : null;
+
       const { error } = await supabase
         .from('profiles')
         .upsert({
           user_id: user.id,
-          ...profile
+          ...profile,
+          document_type: normalizedDocType,
         });
 
       if (error) throw error;
@@ -347,16 +353,16 @@ const Profile = () => {
 
                 <div className="space-y-2">
                   <Label htmlFor="document_type">Tipo de Documento</Label>
-                  <select
-                    id="document_type"
-                    value={profile.document_type}
-                    onChange={(e) => setProfile({ ...profile, document_type: e.target.value })}
-                    className="w-full p-2 border rounded-md"
-                  >
-                    <option value="passport">Passaporte</option>
-                    <option value="nie">NIE (Espanha)</option>
-                    <option value="dni">DNI (Espanha)</option>
-                  </select>
+                  <Select value={profile.document_type} onValueChange={(value) => setProfile({ ...profile, document_type: value })}>
+                    <SelectTrigger id="document_type">
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="passport">Passaporte</SelectItem>
+                      <SelectItem value="nie">NIE (Espanha)</SelectItem>
+                      <SelectItem value="dni">DNI (Espanha)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="space-y-2">

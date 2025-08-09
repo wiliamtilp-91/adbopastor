@@ -86,6 +86,7 @@ const AdminDashboard = () => {
   const [newEvent, setNewEvent] = useState({ name: '', description: '', event_date: '', event_time: '' });
   const [selectedMember, setSelectedMember] = useState<any | null>(null);
   const [memberDialogOpen, setMemberDialogOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Sidebar menu items
   const menuItems = [
@@ -105,6 +106,21 @@ const AdminDashboard = () => {
   useEffect(() => {
     loadDashboardData();
     loadDailyVerse();
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('user_id', user.id)
+            .single();
+          setIsAdmin(!!data?.is_admin);
+        }
+      } catch (err) {
+        console.error('Erro ao verificar permissão admin:', err);
+      }
+    })();
   }, []);
 
   const loadDashboardData = async () => {
@@ -411,12 +427,15 @@ const openMemberDialog = (member: any) => {
 };
 
 // Save member changes
-const saveMemberChanges = async () => {
-  if (!selectedMember) return;
-  try {
-    const { error } = await supabase
-      .from('profiles')
-      .update({
+  const saveMemberChanges = async () => {
+    if (!selectedMember) return;
+    try {
+      const normalizeDocType = (s: any) => {
+        const t = (s ?? '').toString().trim().toLowerCase();
+        return ['passport', 'nie', 'dni'].includes(t) ? t : null;
+      };
+
+      const updatePayload: any = {
         full_name: selectedMember.full_name,
         phone: selectedMember.phone,
         address: selectedMember.address,
@@ -424,23 +443,30 @@ const saveMemberChanges = async () => {
         zip_code: selectedMember.zip_code,
         country: selectedMember.country,
         church_name: selectedMember.church_name,
-        document_type: selectedMember.document_type,
+        document_type: normalizeDocType(selectedMember.document_type),
         document_number: selectedMember.document_number,
-        is_admin: selectedMember.is_admin,
-      })
-      .eq('id', selectedMember.id);
+      };
 
-    if (error) throw error;
+      if (isAdmin) {
+        updatePayload.is_admin = !!selectedMember.is_admin;
+      }
 
-    toast({ title: 'Sucesso', description: 'Dados do membro atualizados.' });
-    setMemberDialogOpen(false);
-    setSelectedMember(null);
-    loadDashboardData();
-  } catch (e) {
-    console.error(e);
-    toast({ title: 'Erro', description: 'Não foi possível atualizar o membro.', variant: 'destructive' });
-  }
-};
+      const { error } = await supabase
+        .from('profiles')
+        .update(updatePayload)
+        .eq('id', selectedMember.id);
+
+      if (error) throw error;
+
+      toast({ title: 'Sucesso', description: 'Dados do membro atualizados.' });
+      setMemberDialogOpen(false);
+      setSelectedMember(null);
+      loadDashboardData();
+    } catch (e) {
+      console.error(e);
+      toast({ title: 'Erro', description: 'Não foi possível atualizar o membro.', variant: 'destructive' });
+    }
+  };
 
 return (
   <SidebarProvider>
@@ -1143,7 +1169,19 @@ return (
                   </div>
                   <div>
                     <Label>Documento (tipo)</Label>
-                    <Input value={selectedMember.document_type || ''} onChange={(e) => setSelectedMember({ ...selectedMember, document_type: e.target.value })} />
+                    <Select
+                      value={(selectedMember.document_type || '').toLowerCase()}
+                      onValueChange={(value) => setSelectedMember({ ...selectedMember, document_type: value })}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione o tipo" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="passport">Passaporte</SelectItem>
+                        <SelectItem value="nie">NIE (Espanha)</SelectItem>
+                        <SelectItem value="dni">DNI (Espanha)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div>
                     <Label>Número do documento</Label>
@@ -1176,8 +1214,13 @@ return (
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <Switch checked={!!selectedMember.is_admin} onCheckedChange={(checked) => setSelectedMember({ ...selectedMember, is_admin: checked })} id="is-admin" />
-                  <Label htmlFor="is-admin">Designar como Administrador</Label>
+                  <Switch disabled={!isAdmin} checked={!!selectedMember.is_admin} onCheckedChange={(checked) => setSelectedMember({ ...selectedMember, is_admin: checked })} id="is-admin" />
+                  <div>
+                    <Label htmlFor="is-admin">Designar como Administrador</Label>
+                    {!isAdmin && (
+                      <p className="text-xs text-muted-foreground">Apenas administradores podem alterar este campo.</p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="flex justify-end gap-2">
